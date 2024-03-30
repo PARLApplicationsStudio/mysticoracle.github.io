@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
     overflow: hidden;
     background-color: #1a1a1a;
     color: #fff;
-    position: relative; /* Add this to position the mute button */
+    position: relative; /* Bunu ekleyin, sessiz düğmeyi konumlandırmak için */
   }
 
   /* Mute button styles */
@@ -29,8 +29,8 @@
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: transparent; /* Change button background to transparent */
-    border: none; /* Remove border */
+    background-color: transparent; /* Düğme arka plan rengini saydam yapın */
+    border: none; /* Sınırı kaldır */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,12 +38,12 @@
   }
 
   #mute-button:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Add slight opacity on hover */
+    background-color: rgba(255, 255, 255, 0.1); /* Üzerine gelince hafif saydamlık ekle */
   }
 
   #mute-button i {
     font-size: 24px;
-    color: #fff; /* Set icon color to white */
+    color: #fff; /* Simgenin rengini beyaz olarak ayarlayın */
   }
 
   #game-content {
@@ -76,7 +76,7 @@
     border: 2px solid #fff;
     color: #fff;
     width: 80%;
-    max-width: 400px; /* Adjust maximum width */
+    max-width: 400px; /* Maksimum genişliği ayarlayın */
     text-align: center;
     font-family: 'Monospace', monospace;
     outline: none;
@@ -129,12 +129,12 @@
   </button>
   <div id="game-content">
     <video id="video-background" autoplay muted loop>
-      Your browser does not support the video tag.
+      Tarayıcınız video etiketini desteklemiyor.
     </video>
-    <h1 id="game-title">Mystic Oracle</h1>
-    <input type="text" id="question-input" placeholder="What is your question?">
+    <h1 id="game-title">Mistik Kahin</h1>
+    <input type="text" id="question-input" placeholder="Sorunuz nedir?">
     <br>
-    <button id="answer-button" onclick="checkQuestion()">Get Your Answer</button>
+    <button id="answer-button" onclick="checkQuestion()">Cevabınızı Alın</button>
     <div id="answer"></div>
   </div>
 
@@ -148,10 +148,10 @@
       "https://cdn.pixabay.com/video/2017/12/20/13495-248644905_large.mp4"
     ];
 
-    // Randomly select a video URL from the array
+    // Diziden rastgele bir video URL'si seçin
     const randomVideoUrl = videoUrls[Math.floor(Math.random() * videoUrls.length)];
 
-    // Set the selected video URL as the source for the background video element
+    // Seçilen video URL'sini arka plan video öğesi için kaynak olarak ayarlayın
     const videoBackground = document.getElementById('video-background');
     videoBackground.src = randomVideoUrl;
 
@@ -160,7 +160,7 @@
     const answerText = document.getElementById("answer");
     const answerButton = document.getElementById("answer-button");
 
-    // Sequentially apply fade-in and push-up effects to game elements
+    // Oyun öğelerine sırayla fade-in ve push-up efektleri uygulayın
     setTimeout(() => {
       gameTitle.classList.add("visible");
     }, 500);
@@ -177,154 +177,117 @@
       answerButton.classList.add("visible");
     }, 2000);
 
-    let lastQuestion = ''; // Variable to store the last asked question
-    let buttonCooldown = false; // Flag to track button cooldown
+    let lastQuestion = ''; // Son sorulan soruyu saklamak için değişken
+    let buttonCooldown = false; // Düğme soğuma durumunu izlemek için bayrak
 
-    // Initialize Typed.js
+    // Typed.js'yi başlatın
     var typed = new Typed('#answer', {
-      strings: [''], // Empty array to start with no text
-      typeSpeed: 30, // Faster typing speed in milliseconds
-      backSpeed: 20, // Faster backspacing speed in milliseconds
-      loop: false // Typing animation does not loop
+      strings: [''], // Başlangıçta metinsiz dizi
+      typeSpeed: 30, // Yazma hızı (milisaniye cinsinden)
+      backSpeed: 20, // Geri silme hızı (milisaniye cinsinden)
+      loop: false // Yazma animasyonu tekrar etmez
     });
 
-    // Function to update the answer text and trigger typing animation
+    // Cevabı güncelleyen ve yazma animasyonunu tetikleyen işlev
     function updateAnswerText(answer) {
-      typed.reset(); // Reset Typed.js instance
-      typed.strings = [answer]; // Set answer text as string for typing animation
-      typed.start(); // Start typing animation
+      typed.reset(); // Typed.js örneğini sıfırla
+      typed.strings = [answer]; // Yazma animasyonu için cevap metnini dizi olarak ayarla
+      typed.start(); // Yazma animasyonunu başlat
     }
 
-    // Function to get a random answer from the predefined list
+    // Önceden tanımlanmış listeden rastgele bir cevap alın
     function getAnswer() {
       const answers = [
-        "Yes",
-        "No",
-        "Absolutely",
-        "Definitely",
-        "Certainly",
-        "For sure",
-        "Without a doubt",
-        "It is certain",
-        "Most likely",
-        "Outlook good",
-        "Signs point to yes",
-        "Ask again later",
-        "Cannot predict now",
-        "Concentrate and ask again",
-        "Don't count on it",
-        "My sources say no",
-        "Outlook not so good",
-        "Very doubtful",
-        "Sure thing",
-        "Indubitably",
-        "Positively",
-        "Undoubtedly",
-        "You can bet on it",
-        "Chances are high",
-        "Seems likely",
-        "All signs say yes",
-        "The stars align for yes",
-        "It's a safe bet",
-        "In all likelihood",
-        "All indicators point to yes",
-        "Absolutely positively",
-        "Certainly without a doubt",
-        "Undeniably",
-        "Without question",
-        "Most assuredly",
-        "Definitely yes",
-        "Naturally",
-        "Without fail",
-        "One hundred percent",
-        "Surely",
-        "Unquestionably",
-        "Assuredly",
-        "Beyond the shadow of a doubt",
-        "Unarguably",
-        "Beyond any doubt",
-        "Incontestably",
-        "Beyond doubt",
-        "Evidently",
-        "Clear as day",
-        "Unmistakably",
-        "Beyond dispute",
-        "Beyond question",
-        "Beyond any shadow of doubt",
-        "Plainly",
-        "It goes without saying",
-        "With certainty",
-        "Beyond all doubt",
-        "Beyond any question",
-        "No doubt about it",
-        "Indisputably",
-        "Beyond a shadow of a doubt",
-        "Plain and simple",
-        "Without the shadow of a doubt",
-        "Beyond all question",
-        "Crystal clear",
-        "Without a shadow of a doubt",
-        "There's no doubt about it",
-        "With no ifs, ands, or buts",
-        "Unquestioningly",
-        "Without reservation",
-        "Beyond any shadow of a question",
-        "Without any question",
-        "As sure as can be",
-        "With no doubt",
-        "Beyond the shadow of any doubt",
-        "It's a certainty",
-        "Beyond cavil",
-        "For certain",
-        "Without any doubt whatsoever",
-        "As sure as anything",
-        "Without question or doubt",
-        "With no reservations",
-        "With no question",
-        "Inarguably",
-        "Without any question or doubt",
-        "As sure as anything in this world",
-        "It's a sure thing",
-        "Beyond any doubt whatsoever",
-        "For a fact",
-        "Without question or hesitation",
-        "With no uncertainty",
-        "Without any question whatsoever",
-        "As sure as fate",
-        "Without any question or hesitation",
-        "As sure as fate itself",
-        "As sure as night follows day",
-        "With no shadow of a doubt",
-        "With no question or doubt",
-        "With no question or reservation",
-        "With no hesitation",
-        "As sure as I'm standing here",
-        "Without a shadow of doubt",
-        "With no ifs, ands, or buts about it",
-        "With no ifs, ands, or buts whatsoever",
-        "With no ifs, ands, or buts about it whatsoever",
-        "Without a doubt in my mind",
-        "Without a doubt in my heart",
-        "Without a doubt in my soul",
-        "Without a doubt in my bones",
-        "Without a doubt in my being",
-        "Hmm, interesting question...",
-        "Well, that's a twist!",
-        "Wow, I didn't see that coming!",
-        "That's a new one!",
-        "You've got me stumped!",
-        "Hmm, let me think about that for a moment.",
-        "I'm not sure how to respond to that!",
-        "That's a head-scratcher!",
-        "Hmm, I'll need some time to ponder that.",
-        "Well, isn't that a surprise!"
+        "Evet",
+        "Hayır",
+        "Kesinlikle",
+        "Kesinlikle",
+        "Kuşkusuz",
+        "Kesinlikle",
+        "Şüphesiz",
+        "Bunu belirtmektedir",
+        "Muhtemelen",
+        "Görünüşe göre",
+        "Işık evet",
+        "Daha sonra tekrar sor",
+        "Şu an tahmin edemem",
+        "Konsantre ol ve tekrar sor",
+        "Buna güvenme",
+        "Kaynaklarım hayır diyor",
+        "Görünüm pek iyi değil",
+        "Çok şüpheli",
+        "Kesin şey",
+        "Şüphesiz",
+        "Şüphesiz",
+        "Bahse girebilirsiniz",
+        "Şanslar yüksek",
+        "Olası görünüyor",
+        "Tüm işaretler evet diyor",
+        "Yıldızlar evet için hizalanıyor",
+        "Güvenli bir bahis",
+        "Muhtemelen",
+        "Tüm göstergeler evet diyor",
+        "Kesinlikle kesin",
+        "Kesinlikle evet",
+        "Tabii ki",
+        "Başarısız olmadı",
+        "Yüzde yüz",
+        "Kuşkusuz",
+        "Şüphesiz",
+        "Kuşkusuz",
+        "Bütün gölgesiz",
+        "Tartışılmaz",
+        "Şüphe götürmez",
+        "Bütün şüphe götürmez",
+        "Görünüşe göre",
+        "Gün gibi açık",
+        "Kuşkusuz",
+        "Tartışmasız",
+        "Herhangi bir şüpheye yer olmadığını",
+        "Açıkça",
+        "Bunu demek gereksiz",
+        "Kesinlikle",
+        "Her şüphe dışında",
+        "Tüm soru dışında",
+        "Şüphe yok",
+        "Tartışılmaz",
+        "Gölgesiz şüpheye yer olmadığını",
+        "Basit ve açık",
+        "Şüphesiz",
+        "Herhangi bir soru veya şüphesiz",
+        "Hiç bir şüphe olmadan",
+        "Kaderin kendisi kadar kesin",
+        "Gecenin gündüzü kadar kesin",
+        "Hiçbir gölgeyi görmeyen",
+        "Hiçbir soru veya şüphesiz",
+        "Hiçbir şüphe veya tereddüt olmadan",
+        "Hiçbir şüphe olmadan",
+        "Hiçbir tereddüt olmadan",
+        "Hiçbir soru olmadan",
+        "Hiçbir belirsizlik olmadan",
+        "Hiçbir şüphe veya tereddüt olmadan",
+        "Kesinlikle aklımda şüphe yok",
+        "Kesinlikle kalbimde şüphe yok",
+        "Kesinlikle ruhumda şüphe yok",
+        "Kesinlikle kemiklerimde şüphe yok",
+        "Kesinlikle varlığımda şüphe yok",
+        "Hmm, ilginç bir soru...",
+        "Hmm, bu bir sürpriz!",
+        "Vay canına, bunu göremedim!",
+        "Bu yeni!",
+        "Beni şaşırttın!",
+        "Hmm, bir dakika düşünmem lazım.",
+        "Buna nasıl cevap vereceğimi bilmiyorum!",
+        "Bu bir zorlayıcı soru!",
+        "Hmm, bu üzerine düşünmek için biraz zaman alacak.",
+        "Eh, bu bir sürpriz!"
       ];
 
       const randomIndex = Math.floor(Math.random() * answers.length);
       return answers[randomIndex];
     }
 
-    // Function to toggle mute for background music
+    // Arka plandaki müziği sessize almak için işlev
     function toggleMute() {
       const audio = document.getElementById('background-music');
       const muteButtonIcon = document.querySelector('#mute-button i');
@@ -338,81 +301,81 @@
       }
     }
 
-    // Function to play sound effect
+    // Ses efekti çalmak için işlev
     function playSoundEffect() {
       const audio = new Audio("https://cdn.pixabay.com/download/audio/2024/01/17/audio_86a4d942de.mp3?filename=magic-charge-mana-2-186628.mp3");
-      audio.volume = 0.8; // Adjust volume to 0.8
+      audio.volume = 0.8; // Ses seviyesini 0.8'e ayarlayın
       audio.play();
     }
 
-    // Function to validate and process the question
+    // Soruyu doğrulamak ve işlemek için işlev
     function checkQuestion() {
       if (buttonCooldown) {
-        return; // Do nothing if button is on cooldown
+        return; // Düğme soğuma durumundaysa hiçbir şey yapmayın
       }
 
       const questionInputValue = questionInput.value.trim();
 
-      // Play sound effect
+      // Ses efekti çal
       playSoundEffect();
 
-      // Validate question length
+      // Soru uzunluğunu doğrula
       if (questionInputValue.length < 10) {
-        updateAnswerText("Please enter a longer question.");
+        updateAnswerText("Lütfen daha uzun bir soru girin.");
         return;
       }
 
-      // Validate question format
+      // Soru formatını doğrula
       if (!questionInputValue.endsWith("?") || /^\?+$/.test(questionInputValue)) {
-        updateAnswerText("Please ask a valid question.");
+        updateAnswerText("Lütfen geçerli bir soru sorun.");
         return;
       }
 
-      // Check for repeated questions
+      // Tekrarlanan soruları kontrol et
       if (questionInputValue === lastQuestion) {
-        updateAnswerText("I can only answer your question once.");
+        updateAnswerText("Sorunuza yalnızca bir kez cevap verebilirim.");
         return;
       }
 
-      // Trigger answer processing
+      // Cevap işlemini tetikle
       processQuestion(questionInputValue);
     }
 
-    // Function to process the question and display the answer
+    // Soruyu işlemek ve cevabı göstermek için işlev
     function processQuestion(questionInputValue) {
-      answerButton.disabled = true; // Disable button during animation
+      answerButton.disabled = true; // Animasyon sırasında düğmeyi devre dışı bırak
       const answer = getAnswer();
-      updateAnswerText("Analyzing your question..."); // Display initial message
+      updateAnswerText("Sorunuz analiz ediliyor..."); // Başlangıç mesajını görüntüleyin
 
-      // Delayed answer processing
+      // Gecikmeli cevap işleme
       setTimeout(() => {
-        updateAnswerText("Checking for any mistakes in question..."); // Update message with typing animation
+        updateAnswerText("Soruda herhangi bir hata olup olmadığı kontrol ediliyor..."); // Yazma animasyonuyla mesajı güncelle
         setTimeout(() => {
-          updateAnswerText("Thinking what to say..."); // Update message with typing animation
+          updateAnswerText("Ne söyleyeceğini düşünüyor..."); // Yazma animasyonuyla mesajı güncelle
           setTimeout(() => {
-            // Remove animation and set opacity to 1.0 after answer is given
+            // Cevap verildikten sonra animasyonu kaldırın ve opaklığı 1.0'a ayarlayın
             answerText.style.animation = "none";
             answerText.style.opacity = "1.0";
-            updateAnswerText(answer); // Update answer text with typing animation
-            answerButton.disabled = false; // Re-enable button
-          }, 3000); // Delay before showing answer: 3 seconds
-        }, 3000); // Delay before second message: 3 seconds
-      }, 3000); // Delay before first message: 3 seconds
+            updateAnswerText(answer); // Yazma animasyonuyla cevap metnini güncelle
+            answerButton.disabled = false; // Düğmeyi yeniden etkinleştir
+          }, 3000); // Cevabı göstermeden önce gecikme: 3 saniye
+        }, 3000); // İkinci mesaj öncesi gecikme: 3 saniye
+      }, 3000); // İlk mesaj öncesi gecikme: 3 saniye
 
-      lastQuestion = questionInputValue; // Update last question
+      lastQuestion = questionInputValue; // Son soruyu güncelle
 
-      // Set button cooldown
+      // Düğme soğuma süresini ayarlayın
       buttonCooldown = true;
       setTimeout(() => {
         buttonCooldown = false;
-      }, 9000); // Cooldown period: 9 seconds (3 seconds for each message + 6 seconds for answer display)
+      }, 9000); // Soğuma süresi: 9 saniye (Her bir mesaj için 3 saniye + cevap gösterimi için 6 saniye)
     }
 
-    // Function to handle user pressing ENTER key
+    // Kullanıcının ENTER tuşuna basmasını ele almak için işlev
     document.getElementById("question-input").addEventListener("keydown", function(event) {
       if (event.key === "Enter") {
-        event.preventDefault(); // Prevent default behavior (e.g., form submission)
-        checkQuestion(); // Call function to process the question
+        event.preventDefault(); // Varsayılan davranışı önle (örneğin, form gönderimi)
+        checkQuestion(); // Soruyu işlemek için işlevi çağırın
       }
     });
   </script>
