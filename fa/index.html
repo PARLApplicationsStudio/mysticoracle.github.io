@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mystic Oracle</title>
+<link rel="icon" type="image/png" href="icon.png"> <!-- Set favicon -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="shortcut icon" href="icon.png" type="image/png">
-<link rel="icon" href="icon.png" type="image/png">
 <style>
   /* CSS for game interface */
   body {
@@ -370,11 +369,19 @@
         checkQuestion(); // Call function to process the question
       }
     });
-  </script>
-  <script>
-    // Fullscreen the webpage when it starts
-    document.body.requestFullscreen().catch(err => {
-      console.log('Error attempting to enable full-screen mode:', err.message);
+
+    // Enable fullscreen mode when the page loads
+    document.addEventListener("DOMContentLoaded", function() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) { /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        elem.msRequestFullscreen();
+      }
     });
   </script>
 </body>
