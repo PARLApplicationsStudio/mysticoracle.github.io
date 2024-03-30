@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mystic Oracle</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+  /* CSS for game interface */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Monospace', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    color: #fff;
+    position: relative; /* Add this to position the mute button */
+  }
+
+  /* Mute button styles */
+  #mute-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: transparent; /* Change button background to transparent */
+    border: none; /* Remove border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  #mute-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Add slight opacity on hover */
+  }
+
+  #mute-button i {
+    font-size: 24px;
+    color: #fff; /* Set icon color to white */
+  }
+
+  #game-content {
+    text-align: center;
+  }
+
+  #video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(50%);
+  }
+
+  #game-title {
+    font-size: 4em;
+    margin-bottom: 50px;
+    color: #fff;
+    text-shadow: 0 0 5px #d5d5d5, 0 0 5px #d5d5d5, 0 0 5px #d5d5d5, 0 0 5px #d5d5d5, 0 0 5px #d5d5d5;
+  }
+
+  #question-input {
+    margin: 20px auto;
+    margin-bottom: 50px;
+    padding: 10px;
+    font-size: 1.2em;
+    border: 2px solid #fff;
+    color: #fff;
+    width: 80%;
+    max-width: 400px; /* Adjust maximum width */
+    text-align: center;
+    font-family: 'Monospace', monospace;
+    outline: none;
+    background-color: transparent;
+  }
+
+  #question-input::placeholder {
+    color: #fff;
+    opacity: 0.5;
+  }
+
+  #answer {
+    margin: 20px auto 40px auto;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  button {
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-family: 'Monospace', monospace;
+    background-color: #fff;
+    color: black;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #e0e0e0;
+  }
+
+  /* CSS for smaller screens */
+  @media (max-width: 768px) {
+    #question-input {
+      font-size: 1em;
+    }
+    #game-title {
+      font-size: 3em;
+    }
+  }
+</style>
+</head>
+<body>
+  <audio id="background-music" src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_236f0d8d6b.mp3?filename=wandering-6394.mp3" loop volume="0.6" autoplay></audio>
+  <button id="mute-button" onclick="toggleMute()">
+    <i class="material-icons">volume_up</i>
+  </button>
+  <div id="game-content">
+    <video id="video-background" autoplay muted loop>
+      Your browser does not support the video tag.
+    </video>
+    <h1 id="game-title">Mystic Oracle</h1>
+    <input type="text" id="question-input" placeholder="What is your question?">
+    <br>
+    <button id="answer-button" onclick="checkQuestion()">Get Your Answer</button>
+    <div id="answer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script>
+    const videoUrls = [
+      "https://cdn.pixabay.com/video/2019/08/17/26097-357512275_large.mp4",
+      "https://cdn.pixabay.com/video/2019/10/01/27438-363642440_large.mp4",
+      "https://cdn.pixabay.com/video/2021/02/02/63885-508273140_large.mp4",
+      "https://cdn.pixabay.com/video/2021/05/23/74933-554074594_large.mp4",
+      "https://cdn.pixabay.com/video/2017/12/20/13495-248644905_large.mp4"
+    ];
+
+    // Randomly select a video URL from the array
+    const randomVideoUrl = videoUrls[Math.floor(Math.random() * videoUrls.length)];
+
+    // Set the selected video URL as the source for the background video element
+    const videoBackground = document.getElementById('video-background');
+    videoBackground.src = randomVideoUrl;
+
+    const gameTitle = document.getElementById("game-title");
+    const questionInput = document.getElementById("question-input");
+    const answerText = document.getElementById("answer");
+    const answerButton = document.getElementById("answer-button");
+
+    // Sequentially apply fade-in and push-up effects to game elements
+    setTimeout(() => {
+      gameTitle.classList.add("visible");
+    }, 500);
+
+    setTimeout(() => {
+      questionInput.classList.add("visible");
+    }, 1000);
+
+    setTimeout(() => {
+      answerText.classList.add("visible");
+    }, 1500);
+
+    setTimeout(() => {
+      answerButton.classList.add("visible");
+    }, 2000);
+
+    let lastQuestion = ''; // Variable to store the last asked question
+    let buttonCooldown = false; // Flag to track button cooldown
+
+    // Initialize Typed.js
+    var typed = new Typed('#answer', {
+      strings: [''], // Empty array to start with no text
+      typeSpeed: 30, // Faster typing speed in milliseconds
+      backSpeed: 20, // Faster backspacing speed in milliseconds
+      loop: false // Typing animation does not loop
+    });
+
+    // Function to update the answer text and trigger typing animation
+    function updateAnswerText(answer) {
+      typed.reset(); // Reset Typed.js instance
+      typed.strings = [answer]; // Set answer text as string for typing animation
+      typed.start(); // Start typing animation
+    }
+
+    // Function to get a random answer from the predefined list
+    function getAnswer() {
+      const answers = [
+        "Yes",
+        "No",
+        "Absolutely",
+        "Definitely",
+        "Certainly",
+        "For sure",
+        "Without a doubt",
+        "It is certain",
+        "Most likely",
+        "Outlook good",
+        "Signs point to yes",
+        "Ask again later",
+        "Cannot predict now",
+        "Concentrate and ask again",
+        "Don't count on it",
+        "My sources say no",
+        "Outlook not so good",
+        "Very doubtful",
+        "Sure thing",
+        "Indubitably",
+        "Positively",
+        "Undoubtedly",
+        "You can bet on it",
+        "Chances are high",
+        "Seems likely",
+        "All signs say yes",
+        "The stars align for yes",
+        "It's a safe bet",
+        "In all likelihood",
+        "All indicators point to yes",
+        "Absolutely positively",
+        "Certainly without a doubt",
+        "Undeniably",
+        "Without question",
+        "Most assuredly",
+        "Definitely yes",
+        "Naturally",
+        "Without fail",
+        "One hundred percent",
+        "Surely",
+        "Unquestionably",
+        "Assuredly",
+        "Beyond the shadow of a doubt",
+        "Unarguably",
+        "Beyond any doubt",
+        "Incontestably",
+        "Beyond doubt",
+        "Evidently",
+        "Clear as day",
+        "Unmistakably",
+        "Beyond dispute",
+        "Beyond question",
+        "Beyond any shadow of doubt",
+        "Plainly",
+        "It goes without saying",
+        "With certainty",
+        "Beyond all doubt",
+        "Beyond any question",
+        "No doubt about it",
+        "Indisputably",
+        "Beyond a shadow of a doubt",
+        "Plain and simple",
+        "Without the shadow of a doubt",
+        "Beyond all question",
+        "Crystal clear",
+        "Without a shadow of a doubt",
+        "There's no doubt about it",
+        "With no ifs, ands, or buts",
+        "Unquestioningly",
+        "Without reservation",
+        "Beyond any shadow of a question",
+        "Without any question",
+        "As sure as can be",
+        "With no doubt",
+        "Beyond the shadow of any doubt",
+        "It's a certainty",
+        "Beyond cavil",
+        "For certain",
+        "Without any doubt whatsoever",
+        "As sure as anything",
+        "Without question or doubt",
+        "With no reservations",
+        "With no question",
+        "Inarguably",
+        "Without any question or doubt",
+        "As sure as anything in this world",
+        "It's a sure thing",
+        "Beyond any doubt whatsoever",
+        "For a fact",
+        "Without question or hesitation",
+        "With no uncertainty",
+        "Without any question whatsoever",
+        "As sure as fate",
+        "Without any question or hesitation",
+        "As sure as fate itself",
+        "As sure as night follows day",
+        "With no shadow of a doubt",
+        "With no question or doubt",
+        "With no question or reservation",
+        "With no hesitation",
+        "As sure as I'm standing here",
+        "Without a shadow of doubt",
+        "With no ifs, ands, or buts about it",
+        "With no ifs, ands, or buts whatsoever",
+        "With no ifs, ands, or buts about it whatsoever",
+        "Without a doubt in my mind",
+        "Without a doubt in my heart",
+        "Without a doubt in my soul",
+        "Without a doubt in my bones",
+        "Without a doubt in my being",
+        "Hmm, interesting question...",
+        "Well, that's a twist!",
+        "Wow, I didn't see that coming!",
+        "That's a new one!",
+        "You've got me stumped!",
+        "Hmm, let me think about that for a moment.",
+        "I'm not sure how to respond to that!",
+        "That's a head-scratcher!",
+        "Hmm, I'll need some time to ponder that.",
+        "Well, isn't that a surprise!"
+      ];
+
+      const randomIndex = Math.floor(Math.random() * answers.length);
+      return answers[randomIndex];
+    }
+
+    // Function to toggle mute for background music
+    function toggleMute() {
+      const audio = document.getElementById('background-music');
+      const muteButtonIcon = document.querySelector('#mute-button i');
+
+      if (audio.paused) {
+        audio.play();
+        muteButtonIcon.textContent = 'volume_up';
+      } else {
+        audio.pause();
+        muteButtonIcon.textContent = 'volume_off';
+      }
+    }
+
+    // Function to play sound effect
+    function playSoundEffect() {
+      const audio = new Audio("https://cdn.pixabay.com/download/audio/2024/01/17/audio_86a4d942de.mp3?filename=magic-charge-mana-2-186628.mp3");
+      audio.volume = 0.8; // Adjust volume to 0.8
+      audio.play();
+    }
+
+    // Function to validate and process the question
+    function checkQuestion() {
+      if (buttonCooldown) {
+        return; // Do nothing if button is on cooldown
+      }
+
+      const questionInputValue = questionInput.value.trim();
+
+      // Play sound effect
+      playSoundEffect();
+
+      // Validate question length
+      if (questionInputValue.length < 10) {
+        updateAnswerText("Please enter a longer question.");
+        return;
+      }
+
+      // Validate question format
+      if (!questionInputValue.endsWith("?") || /^\?+$/.test(questionInputValue)) {
+        updateAnswerText("Please ask a valid question.");
+        return;
+      }
+
+      // Check for repeated questions
+      if (questionInputValue === lastQuestion) {
+        updateAnswerText("I can only answer your question once.");
+        return;
+      }
+
+      // Trigger answer processing
+      processQuestion(questionInputValue);
+    }
+
+    // Function to process the question and display the answer
+    function processQuestion(questionInputValue) {
+      answerButton.disabled = true; // Disable button during animation
+      const answer = getAnswer();
+      updateAnswerText("Analyzing your question..."); // Display initial message
+
+      // Delayed answer processing
+      setTimeout(() => {
+        updateAnswerText("Checking for any mistakes in question..."); // Update message with typing animation
+        setTimeout(() => {
+          updateAnswerText("Thinking what to say..."); // Update message with typing animation
+          setTimeout(() => {
+            // Remove animation and set opacity to 1.0 after answer is given
+            answerText.style.animation = "none";
+            answerText.style.opacity = "1.0";
+            updateAnswerText(answer); // Update answer text with typing animation
+            answerButton.disabled = false; // Re-enable button
+          }, 3000); // Delay before showing answer: 3 seconds
+        }, 3000); // Delay before second message: 3 seconds
+      }, 3000); // Delay before first message: 3 seconds
+
+      lastQuestion = questionInputValue; // Update last question
+
+      // Set button cooldown
+      buttonCooldown = true;
+      setTimeout(() => {
+        buttonCooldown = false;
+      }, 9000); // Cooldown period: 9 seconds (3 seconds for each message + 6 seconds for answer display)
+    }
+
+    // Function to handle user pressing ENTER key
+    document.getElementById("question-input").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Prevent default behavior (e.g., form submission)
+        checkQuestion(); // Call function to process the question
+      }
+    });
+  </script>
+</body>
+</html>
